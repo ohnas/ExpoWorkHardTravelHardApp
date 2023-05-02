@@ -6,9 +6,20 @@ import { useState } from 'react';
 export default function App() {
   const [working, setWorking] = useState(true);
   const [text, setText] = useState("");
+  const [toDos, setToDos] = useState({});
   const travel = () => setWorking(false);
   const work = () => setWorking(true);
   const onChangeText = (payload) => setText(payload);
+  const addToDo = () => {
+    if (text === "") {
+      return;
+    }
+    const newToDos = Object.assign({}, toDos, {
+      [Date.now()]: { text, work: working },
+    });
+    setToDos(newToDos);
+    setText("");
+  };
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -19,7 +30,7 @@ export default function App() {
           <Text style={{...styles.btnText, color: !working ? "white" : theme.grey}}>Travel</Text>
         </TouchableOpacity>
       </View>
-      <TextInput onChangeText={onChangeText} value={text} placeholder={working? "Add a To do" : "Where do you want to go?"} style={styles.input} />
+      <TextInput onSubmitEditing={addToDo} returnKeyType='done' onChangeText={onChangeText} value={text} placeholder={working? "Add a To do" : "Where do you want to go?"} style={styles.input} />
       <StatusBar style="auto" />
     </View>
   );
